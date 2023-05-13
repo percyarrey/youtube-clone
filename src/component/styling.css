@@ -1,0 +1,78 @@
+.Themebtn{
+    width: 2.4rem;
+    height: 1.5rem;
+    background-color: white;
+    border: 3px solid black;
+    overflow: hidden;
+    padding: 1px;
+    position: relative;
+}
+.Themebtn div{
+    height: 0;
+    width: 0;
+    transform: translateX(-0.38rem);
+    transition: 0.16s  ease-in;
+}
+.Themebtn div div{
+    margin-top: 0.8px;
+    width: 1.03rem;
+    height: 1.06rem;
+}
+.Themebtn input{
+    position: relative;
+    top: -0.9rem;
+    opacity: 0;
+    height: 3rem;
+    transform: rotate(90deg);
+    z-index: 1;
+}
+.Themebtn input:checked + div{
+    transform: translateX(0.36rem);
+}
+.leftbtn{
+    background-image: linear-gradient(to right, rgba(255,255,255,1) 70%,rgba(255,255,255,0));
+    background-size: 100% 100%;
+}
+.mycard{
+    width: 400px;
+}
+.mycard img{
+    border-radius: 6%;
+}
+.mycard:hover img{
+    animation: imghover 0.3s  ease-out;
+    border-radius: 1%;
+    scale: 1.01;
+}
+.mydots{
+    display: none;
+}
+.mycard-body:hover .mydots{
+    display: block;
+}
+@keyframes imghover{
+    0%   {border-radius: 6%;}
+    100% {border-radius: 0%; scale: 1.01;}
+}
+.myico{
+    transform: rotate(90deg);
+}
+.mysugbtn nobr button{
+    background-color: rgba(128, 128, 128, 0.236);
+    border: 0;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    margin-top:0.4rem;
+    border-radius: 10%;
+}
+.myForm{
+    width: 100%;
+}
+@media (max-width:576px){
+    .myForm{
+        width: 3rem;
+    }
+}
+
