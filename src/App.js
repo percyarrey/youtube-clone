@@ -1,6 +1,6 @@
 import './App.css';
 import React from 'react';
-
+import axios, { Axios } from 'axios';
 
 /* COMPONENT IMPORT */
 import Navbar from './component/Navbar';
@@ -18,13 +18,23 @@ function App() {
   //Fetch youtube data
   const [myResponse,setmyResponse]=React.useState() 
   React.useEffect(function(){
-    async function myfxn(){
-      var res = await fetch("https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCpqXJOEqGS-TCnazcHCo0rA&maxResults=10&order=date&safeSearch=moderate&key=AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM")
+    axios.get("https://youtube.googleapis.com/youtube/v3/search",
+    {params: {
+      type:"video",
+      part:'snippet',
+      maxResults:10,
+      key:"AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM",
+      q:"tomb raider"
+    }})
+    .then(res=> setmyResponse(()=>{return (res.data)}))
+
+    /* async function myfxn(){
+      var res = await fetch("https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCpqXJOEqGS-TCnazcHCo0rA&maxResults=300&order=date&safeSearch=moderate&key=AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM")
           .then(res=> res.json())
           .then(res=>setmyResponse(()=>{return (res)}))
           .catch()
     }
-    myfxn()
+    myfxn() */
   }, [])
   //const Cards = Array.from({length:6}).map((_,i)=>(<Videocards key={i}/>))
   //Theme Toggle
@@ -80,7 +90,13 @@ function App() {
       }
       
     }
-
+  const newReponse = ()=>{
+    if(myResponse!=undefined){
+      return myResponse.items
+    }else{
+      return 1
+    }
+  }
   return (
     <div  style={{backgroundColor:`${theme.bg}`,color:`${theme.text}`}}>
       <div style={{position:"relative",zIndex:1}}>
@@ -128,7 +144,7 @@ function App() {
               {/* SUGGESTION */}
               <Wsugest theme={theme}/>
               {/* CARDS */}
-              <Videocards videoitems={myResponse.items} num={7} theme={theme}/>
+              <Videocards snippet={newReponse()} num={newReponse().length} theme={theme}/>
             </div>
           </div>
         </div>

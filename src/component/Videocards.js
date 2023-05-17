@@ -3,9 +3,7 @@ import Cards from './Cards';
 
 
 export default function Videocards(props) {
-    const items = ()=>{
-        props.videoitems
-    }
+    var count=-1
     let num = props.num;
     function itemsState(){
         if(window.innerWidth<=700){
@@ -37,12 +35,19 @@ export default function Videocards(props) {
         }
     })
     function NormalRow(props){
-        console.log(props.videoitems)
-            const norCards = Array.from({length:props.cs}).map((_,i)=>(<Cards videoitems={} key={i} theme={props.theme} cardclass={items}/>))
+            function Myj(){
+                var norCards = Array.from({length:props.cs}).map((_,i)=>{
+                    if(count<props.newsnip.length-1){
+                        count+=1
+                        return (<Cards videoid={props.newsnip[count].id.videoId} video={props.newsnip[count].snippet}  key={i} theme={props.theme} cardclass={items}/>)
+                    }
+                })
+                return(norCards)
+            }
             return(
                 <div className='row'>
-                    {norCards}
-                    {norCards}
+                    <Myj/>
+                    <Myj/>
                 </div>
             )
     }
@@ -56,29 +61,20 @@ export default function Videocards(props) {
     function norshotCards(cardneeded){
         var numRow = Math.ceil(cardneeded/Currentscreensize())
         var finalCards; 
-        if(props.videoitems!=undefined){
+        if(props.snippet!=1){
             finalCards = Array.from({length:(numRow)}).map((_,i)=>{
                 if(i%2!==0){
                     return <ShotRow key={i}/>
                 }else{
-                    return <NormalRow cs={Currentscreensize()} theme={props.theme}  key={i}/>
+                    return <NormalRow newsnip={props.snippet} cs={Currentscreensize()} theme={props.theme}  key={i}/>
                 }
             })
-        }else{
-            const finalCards=()=>{
-                return(
-                    <div>
-                        <h1>Hello World</h1>
-                    </div>
-                )
-            }
+            return(
+                <div>
+                   {finalCards} 
+                </div>
+            )
         }
-
-        return(
-            <div>
-               {finalCards} 
-            </div>
-        )
     }
     setInterval(()=>{
         setitems(()=>{
