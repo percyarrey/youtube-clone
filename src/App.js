@@ -23,7 +23,7 @@ function App() {
     {params: {
       type:"video",
       part:'snippet',
-      maxResults:5,
+      maxResults:100000,
       key:"AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM",
       q:'',
       videoDefinition: 'high',
@@ -32,7 +32,7 @@ function App() {
     }})
     .then(res=>{
         pagetoken = res.data.nextPageToken;
-        console.log(pagetoken)
+        console.log(res.data)
         videolist = res.data.items
         setmyResponse(()=>{return (res.data.items)})
       })
@@ -66,37 +66,6 @@ function App() {
       }))
     }
   }
-
-  //Fetch the next 30 videos
-    React.useEffect(()=>{
-      window.addEventListener('scroll', () => {
-        if(myResponse!=undefined){
-          const scrollPosition = window.scrollY;
-          const documentHeight = document.documentElement.scrollHeight;
-          const windowHeight = window.innerHeight;
-        
-          if (scrollPosition + windowHeight >= documentHeight) {
-            axios.get("https://youtube.googleapis.com/youtube/v3/search", {
-              params: {
-                type:"video",
-                part:'snippet',
-                maxResults:5,
-                key:"AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM",
-                q:'gta 6',
-                pageToken: pagetoken
-              }
-            })
-            .then(res => {
-              pagetoken = res.data.nextPageToken;
-              videolist=[...videolist, ...res.data.items]
-              setmyResponse(videolist)
-              console.log(videolist)
-            })
-          }
-        }
-      });
-    },[myResponse])
-
   //MAIN MENU CONTROL
     var myMenu = React.useRef(null)
     var menuAnimate = React.useRef(null)
