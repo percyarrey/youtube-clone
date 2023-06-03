@@ -14,19 +14,28 @@ import { BsPlayBtn,BsBook,BsReplyAll} from "react-icons/bs";
 
 
 function App() {
-
+  var pagetoken;
+  var videolist;
   //Fetch youtube data
-  const [myResponse,setmyResponse]=React.useState() 
+  const [myResponse,setmyResponse]=React.useState()
   React.useEffect(function(){
     axios.get("https://youtube.googleapis.com/youtube/v3/search",
     {params: {
       type:"video",
       part:'snippet',
-      maxResults:10,
+      maxResults:5,
       key:"AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM",
-      q:"tomb raider"
+      q:'',
+      videoDefinition: 'high',
+      videoEmbeddable: true,
+      videoSyndicated: true,
     }})
-    .then(res=> setmyResponse(()=>{return (res.data)}))
+    .then(res=>{
+        pagetoken = res.data.nextPageToken;
+        console.log(pagetoken)
+        videolist = res.data.items
+        setmyResponse(()=>{return (res.data.items)})
+      })
 
     /* async function myfxn(){
       var res = await fetch("https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCpqXJOEqGS-TCnazcHCo0rA&maxResults=300&order=date&safeSearch=moderate&key=AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM")
@@ -57,7 +66,37 @@ function App() {
       }))
     }
   }
-  
+
+  //Fetch the next 30 videos
+    React.useEffect(()=>{
+      window.addEventListener('scroll', () => {
+        if(myResponse!=undefined){
+          const scrollPosition = window.scrollY;
+          const documentHeight = document.documentElement.scrollHeight;
+          const windowHeight = window.innerHeight;
+        
+          if (scrollPosition + windowHeight >= documentHeight) {
+            axios.get("https://youtube.googleapis.com/youtube/v3/search", {
+              params: {
+                type:"video",
+                part:'snippet',
+                maxResults:5,
+                key:"AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM",
+                q:'gta 6',
+                pageToken: pagetoken
+              }
+            })
+            .then(res => {
+              pagetoken = res.data.nextPageToken;
+              videolist=[...videolist, ...res.data.items]
+              setmyResponse(videolist)
+              console.log(videolist)
+            })
+          }
+        }
+      });
+    },[myResponse])
+
   //MAIN MENU CONTROL
     var myMenu = React.useRef(null)
     var menuAnimate = React.useRef(null)
@@ -90,13 +129,13 @@ function App() {
       }
       
     }
-  const newReponse = ()=>{
-    if(myResponse!=undefined){
-      return myResponse.items
-    }else{
-      return 1
+    function newReponse(){
+      if(myResponse!=undefined){
+        return myResponse
+      }else{
+        return 1
+      }
     }
-  }
   return (
     <div  style={{backgroundColor:`${theme.bg}`,color:`${theme.text}`}}>
       <div style={{position:"relative",zIndex:1}}>
@@ -109,7 +148,7 @@ function App() {
           <div className='row'>
             {/* NAVIGATION */}
             <div className='container-fluid d-none d-sm-flex flex-column col-md-1 col-2'></div>
-            <div  className=' position-fixed container-fluid d-none d-sm-flex flex-column col-md-1 col-2'>
+<div  className=' position-fixed container-fluid d-none d-sm-flex flex-column col-md-1 col-2'>
               {/* HOME */}
               <button className='btn m-0 border-0 p-0 mt-4 d-flex justify-content-center align-items-center'>
                 <div  className={lgmenu}>
@@ -138,13 +177,13 @@ function App() {
                   <small style={{color:`${theme.text}`}}>Library</small>
                 </div>
               </button>
-            </div>
+                        </div>
             {/* CONTENT */}
             <div className='col col-sm-10 col-md-11'>
               {/* SUGGESTION */}
               <Wsugest theme={theme}/>
               {/* CARDS */}
-              <Videocards snippet={newReponse()} num={newReponse().length} theme={theme}/>
+              <Videocards snippet={myResponse!=undefined && myResponse} num={myResponse!=undefined && myResponse.length} theme={theme}/>
             </div>
           </div>
         </div>

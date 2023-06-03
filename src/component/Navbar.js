@@ -6,9 +6,13 @@ export default function Navbar(props){
         var [canshow,setcanshow] = React.useState(" d-none")
         var [canhide,setcanhide] = React.useState("")
         var mySearch=React.useRef(null)
+        var myForm=React.useRef(null)
         function  Backfxn(){
                     setcanshow(()=>("d-none"))
                     setcanhide(()=>(""))
+                    if(myForm!=null){
+                        document.getElementById("myForm").classList.remove("myFormcon")
+                    }
         } 
         function Handlesubmit(e) {
             e.preventDefault();
@@ -16,6 +20,9 @@ export default function Navbar(props){
                 if(mySearch.current.classList.contains("d-none")  && window.innerWidth<576){
                     setcanshow(()=>("d-block"))
                     setcanhide(()=>(" d-none"))
+                    if(myForm!=null){
+                        document.getElementById("myForm").classList.add("myFormcon")
+                    }
                 }
             }
         }
@@ -33,7 +40,7 @@ export default function Navbar(props){
                             <a className="navbar-brand" style={{fontFamily:"Impact",backgroundColor:`${props.theme.bg}`,color:`${props.theme.text}`}} target="_blank" rel="noreferrer" href="https://www.youtube.com/"><FaYoutube color="Red" size={30}/> YouTube</a>
                         </div>
                         <div className="w-100 d-flex justify-content-center">
-                            <form className="rounded-pill overflow-hidden justify-content-cent d-flex gap-0 g-0 my-0 myForm" style={{maxWidth:"700px",border:`1px solid ${props.theme.text}`}}  onSubmit={Handlesubmit}>
+                            <form className="rounded-pill overflow-hidden justify-content-cent d-flex gap-0 g-0 my-0 myForm" id="myForm" style={{maxWidth:"700px",border:`1px solid ${props.theme.text}`}} ref={myForm} onSubmit={Handlesubmit}>
                                 <input ref={mySearch}  className={"border-0 form-control rounded-0 d-sm-block "+canshow} type="text" placeholder="Search" style={{backgroundColor:`${props.theme.bg}`,color:`${props.theme.text}`}}/>
                                 <button className="btn rounded-0 rounded-start " style={{backgroundColor:"lightgray"}} type="submit"><FaSearch size={22}/></button>
                             </form>
