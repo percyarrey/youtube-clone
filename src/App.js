@@ -4,7 +4,7 @@ import axios, { Axios } from 'axios';
 
 /* COMPONENT IMPORT */
 import Navbar from './component/Navbar';
-import Videocards from './component/Videocards';
+import Cards from './component/Cards';
 import Wsugest from  './component/Wordsuggestion';
 import MenuExpand  from './component/MenuExpand';
 
@@ -14,28 +14,32 @@ import { BsPlayBtn,BsBook,BsReplyAll} from "react-icons/bs";
 
 
 function App() {
-
+  let i=0;
+  var pagetoken;
   //Fetch youtube data
   const [myResponse,setmyResponse]=React.useState() 
+  const [limit,setlimit]=React.useState(30) 
+
   React.useEffect(function(){
     axios.get("https://youtube.googleapis.com/youtube/v3/search",
     {params: {
       type:"video",
       part:'snippet',
-      maxResults:10,
+      maxResults:limit,
       key:"AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM",
       q:"tomb raider"
     }})
-    .then(res=> setmyResponse(()=>{return (res.data)}))
+    .then(res=>setmyResponse(res.data))
 
     /* async function myfxn(){
       var res = await fetch("https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCpqXJOEqGS-TCnazcHCo0rA&maxResults=300&order=date&safeSearch=moderate&key=AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM")
           .then(res=> res.json())
           .then(res=>setmyResponse(()=>{return (res)}))
           .catch()
+          
     }
     myfxn() */
-  }, [])
+  }, [limit])
   //const Cards = Array.from({length:6}).map((_,i)=>(<Videocards key={i}/>))
   //Theme Toggle
   const [theme,settheme] = React.useState({
@@ -90,73 +94,76 @@ function App() {
       }
       
     }
-  const newReponse = ()=>{
-    if(myResponse!=undefined){
-      return myResponse.items
-    }else{
-      return 1
-    }
-  }
-  return (
-    <div  style={{backgroundColor:`${theme.bg}`,color:`${theme.text}`}}>
-      <div style={{position:"relative",zIndex:1}}>
-        <Navbar theme={theme} Mainmenu={PopMainmenu} Changetheme={Changetheme}/>
-      </div>
-      <div>
-        <div style={{height:"58px"}}></div>
-        {/* Mainbody */}
-        <div className='container-fluid' >
-          <div className='row'>
-            {/* NAVIGATION */}
-            <div className='container-fluid d-none d-sm-flex flex-column col-md-1 col-2'></div>
-            <div  className=' position-fixed container-fluid d-none d-sm-flex flex-column col-md-1 col-2'>
-              {/* HOME */}
-              <button className='btn m-0 border-0 p-0 mt-4 d-flex justify-content-center align-items-center'>
-                <div  className={lgmenu}>
-                  <div className=' d-flex justify-content-center fs-2'><FaHome color={theme.text}/></div>
-                <small className='fw-bold' style={{color:`${theme.text}`}}>Home</small>
+    return (
+      <div  style={{backgroundColor:`${theme.bg}`,color:`${theme.text}`}}>
+        <div style={{position:"relative",zIndex:1}}>
+          <Navbar theme={theme} Mainmenu={PopMainmenu} Changetheme={Changetheme}/>
+        </div>
+        <div>
+          <div style={{height:"58px"}}></div>
+          {/* Mainbody */}
+          <div className='container-fluid' >
+            <div className='row'>
+              {/* NAVIGATION */}
+              <div className='container-fluid d-none d-sm-flex flex-column col-md-1 col-2'></div>
+              <div  className=' position-fixed container-fluid d-none d-sm-flex flex-column col-md-1 col-2'>
+                {/* HOME */}
+                <button className='btn m-0 border-0 p-0 mt-4 d-flex justify-content-center align-items-center'>
+                  <div  className={lgmenu}>
+                    <div className=' d-flex justify-content-center fs-2'><FaHome color={theme.text}/></div>
+                  <small className='fw-bold' style={{color:`${theme.text}`}}>Home</small>
+                  </div>
+                </button>
+                {/* SHORTS */}
+                <button className='btn m-0 p-0 border-0 mt-4 d-flex justify-content-center align-items-center'>
+                  <div  className={lgmenu}>
+                    <div className=' d-flex justify-content-center fs-2'><BsPlayBtn color={theme.text} size={26}/></div>
+                    <small className='' style={{color:`${theme.text}`}}>Shorts</small>
+                  </div>
+                </button>
+                {/* Subcriptions */}
+                <button className='btn m-0 p-0 border-0 mt-4 d-flex justify-content-center align-items-center'>
+                  <div  className={lgmenu}>
+                    <div className=' d-flex justify-content-center fs-2'><BsReplyAll color={theme.text}/></div>
+                    <small className='' style={{color:`${theme.text}`}}>Subcriptions</small>
+                  </div>
+                </button>
+                {/* Library */}
+                <button className='btn m-0 p-0 border-0 mt-4 d-flex justify-content-center align-items-center'>
+                  <div  className={lgmenu}>
+                    <div className=' d-flex justify-content-center fs-2'>< BsBook color={theme.text}/></div>
+                    <small style={{color:`${theme.text}`}}>Library</small>
+                  </div>
+                </button>
+              </div>
+              {/* CONTENT */}
+              <div className='col col-sm-10 col-md-11'>
+                {/* SUGGESTION */}
+                <Wsugest theme={theme}/>
+                {/* CARDS */}
+                <div className=' container-fluid'>
+                  <div className='row'>
+                  {myResponse!=undefined && myResponse.items.map(items=>{
+                    return(
+                      <div key={items.id.videoId}  className='col-12 col-sm-6 col-md-4 col-lg-3'>
+                        <Cards videoid={items.id.videoId} video={items.snippet} theme={theme}/>
+                      </div>
+                    )
+                  })}
+                  </div>
                 </div>
-              </button>
-              {/* SHORTS */}
-              <button className='btn m-0 p-0 border-0 mt-4 d-flex justify-content-center align-items-center'>
-                <div  className={lgmenu}>
-                  <div className=' d-flex justify-content-center fs-2'><BsPlayBtn color={theme.text} size={26}/></div>
-                  <small className='' style={{color:`${theme.text}`}}>Shorts</small>
-                </div>
-              </button>
-              {/* Subcriptions */}
-              <button className='btn m-0 p-0 border-0 mt-4 d-flex justify-content-center align-items-center'>
-                <div  className={lgmenu}>
-                  <div className=' d-flex justify-content-center fs-2'><BsReplyAll color={theme.text}/></div>
-                  <small className='' style={{color:`${theme.text}`}}>Subcriptions</small>
-                </div>
-              </button>
-              {/* Library */}
-              <button className='btn m-0 p-0 border-0 mt-4 d-flex justify-content-center align-items-center'>
-                <div  className={lgmenu}>
-                  <div className=' d-flex justify-content-center fs-2'>< BsBook color={theme.text}/></div>
-                  <small style={{color:`${theme.text}`}}>Library</small>
-                </div>
-              </button>
-            </div>
-            {/* CONTENT */}
-            <div className='col col-sm-10 col-md-11'>
-              {/* SUGGESTION */}
-              <Wsugest theme={theme}/>
-              {/* CARDS */}
-              <Videocards snippet={newReponse()} num={newReponse().length} theme={theme}/>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      {/* MenuExpand */}
-      <div ref={myMenu} className="myMenu d-none" style={{zIndex:2}}>
-        <div ref={menuAnimate}className='w-100 h-100 menuAnimate'>
-          <MenuExpand theme={theme} Popout={PopoutMainmenu}/>
+        {/* MenuExpand */}
+        <div ref={myMenu} className="myMenu d-none" style={{zIndex:2}}>
+          <div ref={menuAnimate}className='w-100 h-100 menuAnimate'>
+            <MenuExpand theme={theme} Popout={PopoutMainmenu}/>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-export default App;
+    );
+  }
+  
+  export default App;
