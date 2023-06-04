@@ -35,6 +35,7 @@
 }
 .mycard{
     width: 400px;
+    cursor: pointer;
 }
 .mycard img{
     border-radius: 3%;
@@ -70,9 +71,11 @@
 .myForm{
     width: 100%;
 }
+.myFormcon{
+    width: 100% !important;
+}
 @media (max-width:576px){
     .myForm{
         width: 3rem;
     }
 }
-

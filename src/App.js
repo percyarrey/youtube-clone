@@ -11,6 +11,8 @@ import MenuExpand  from './component/MenuExpand';
 /* ICONS IMPORT */
 import { FaHome} from "react-icons/fa";
 import { BsPlayBtn,BsBook,BsReplyAll} from "react-icons/bs";
+/* IMPORT REACT SPINNERS */
+import {Circles} from "react-loader-spinner";
 
 
 function App() {
@@ -30,6 +32,7 @@ function App() {
       q:"tomb raider"
     }})
     .then(res=>setmyResponse(res.data))
+    .catch(res=>setmyResponse(res.message))
 
     /* async function myfxn(){
       var res = await fetch("https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCpqXJOEqGS-TCnazcHCo0rA&maxResults=300&order=date&safeSearch=moderate&key=AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM")
@@ -95,7 +98,7 @@ function App() {
       
     }
     return (
-      <div  style={{backgroundColor:`${theme.bg}`,color:`${theme.text}`}}>
+      <div  style={{backgroundColor:`${theme.bg}`,color:`${theme.text}`,minHeight:"100vh"}}>
         <div style={{position:"relative",zIndex:1}}>
           <Navbar theme={theme} Mainmenu={PopMainmenu} Changetheme={Changetheme}/>
         </div>
@@ -143,13 +146,17 @@ function App() {
                 {/* CARDS */}
                 <div className=' container-fluid'>
                   <div className='row'>
-                  {myResponse!=undefined && myResponse.items.map(items=>{
+                  
+                  {myResponse!=undefined && myResponse.items!=null ?  myResponse.items.map(items=>{
                     return(
                       <div key={items.id.videoId}  className='col-12 col-sm-6 col-md-4 col-lg-3'>
                         <Cards videoid={items.id.videoId} video={items.snippet} theme={theme}/>
                       </div>
                     )
-                  })}
+                  }) : <div style={{height:"60vh"}} className='w-100 d-flex justify-content-center align-items-center'>
+                      {myResponse!=undefined? <div className='fw-bold'>{myResponse}</div> : <Circles color="gray" loading={true} size={150} aria-label="Loading Spinner" data-testid="loader"
+                />}
+                    </div>}
                   </div>
                 </div>
               </div>
