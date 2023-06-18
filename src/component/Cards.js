@@ -3,11 +3,22 @@ import axios from "axios";
 import {BsListCheck,BsShare,BsThreeDots,BsFlag,BsCircleHalf,BsClockHistory} from "react-icons/bs";
 import './styling.css';
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
+
 export default function Card(props) {
     const [duration,setduration]=React.useState("00:00:00")
     const [ago,setago]=React.useState("loading...")
     const [vcount,setvcount]=React.useState("loading...")
-    /* axios.get("https://youtube.googleapis.com/youtube/v3/videos",
+
+    /* NAVIGATION */
+    const navigate = useNavigate()
+    /* ON VIDEO SELECT */
+    function Videoselected() {
+        navigate("/watch/"+props.videoid)
+    }
+
+    axios.get("https://youtube.googleapis.com/youtube/v3/videos",
     {params: {
     id:props.videoid,
     part:'contentDetails',
@@ -58,11 +69,11 @@ export default function Card(props) {
             vcountdata=vcountdata +""
         }
         setvcount(vcountdata)
-    }) */
+    })
     let title = props.video.title.slice(0,30) +"...";
     return(
         <div className={props.cardclass+" d-flex justify-content-center"}>
-            <div style={{backgroundColor:`${props.theme.bg}`,color:`${props.theme.text}`}} className="card border-0 mycard rounded-4 pointer-event">
+            <div onClick={Videoselected} style={{backgroundColor:`${props.theme.bg}`,color:`${props.theme.text}`}} className="card border-0 mycard rounded-4 pointer-event">
             <div className="d-flex justify-content-center">
                 <img alt=""height={202.49} width={"100%"} src={props.video.thumbnails.medium.url}/>            
             </div>
@@ -94,7 +105,7 @@ export default function Card(props) {
                                     <a className="btn" style={{color:`${props.theme.text}`}}  target="_blank" rel="noreferrer" href="https://www.youtube.com/"><BsCircleHalf color={props.theme.text}/> Don't recommend</a>
                                     <a className="btn" style={{color:`${props.theme.text}`}}  target="_blank" rel="noreferrer" href="https://www.youtube.com/"><BsFlag color={props.theme.text}/> Report</a>
                                     </div>
-                                </div>
+                            </div>
                         </div>
                         <div className="col-10"> 
                                 <small className="fs-6 text-muted">{props.video.channelTitle}</small><br></br>

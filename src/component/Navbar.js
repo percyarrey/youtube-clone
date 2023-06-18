@@ -2,7 +2,18 @@ import {FaYoutube, FaArrowLeft,FaSearch,FaMicrophone,FaUserCircle,FaRegMoon,} fr
 import {BsUsbSymbol,BsList,BsGear,BsQuestionCircle,BsBookmark,BsThreeDots} from "react-icons/bs";
 import React  from "react";
 import './styling.css';
+
+/* REACT ROUTER */
+import { Route, Routes, useNavigate } from "react-router-dom";
+import Homepage from "../pages/Homepage";
+import Searchpage from "../pages/Searchpage";
+import Errorpage from "../pages/404page";
 export default function Navbar(props){
+        /* NAVIGATION */
+        const navigate = useNavigate()
+        const [search,setsearch]=React.useState("")
+
+        /* Function Variable */
         var [canshow,setcanshow] = React.useState(" d-none")
         var [canhide,setcanhide] = React.useState("")
         var mySearch=React.useRef(null)
@@ -18,10 +29,21 @@ export default function Navbar(props){
             e.preventDefault();
             if(mySearch!=null ){
                 if(mySearch.current.classList.contains("d-none")  && window.innerWidth<576){
-                    setcanshow(()=>("d-block"))
-                    setcanhide(()=>(" d-none"))
-                    if(myForm!=null){
-                        document.getElementById("myForm").classList.add("myFormcon")
+                    if(canshow==" d-block"){
+                        if(!(search=="")){
+                            navigate("/search/"+search)
+                        }
+                    }else{
+                        setcanshow(()=>(" d-block"))
+                        setcanhide(()=>(" d-none"))
+                        if(myForm!=null){
+                            document.getElementById("myForm").classList.add("myFormcon")
+                        }
+                    }
+                    
+                }else{
+                    if(!(search=="")){
+                        navigate("/search/"+search)
                     }
                 }
             }
@@ -41,7 +63,7 @@ export default function Navbar(props){
                         </div>
                         <div className="w-100 d-flex justify-content-center">
                             <form className="rounded-pill overflow-hidden justify-content-cent d-flex gap-0 g-0 my-0 myForm" id="myForm" style={{maxWidth:"700px",border:`1px solid ${props.theme.text}`}} ref={myForm} onSubmit={Handlesubmit}>
-                                <input ref={mySearch}  className={"border-0 form-control rounded-0 d-sm-block "+canshow} type="text" placeholder="Search" style={{backgroundColor:`${props.theme.bg}`,color:`${props.theme.text}`}}/>
+                                <input onChange={(e)=>setsearch(e.target.value)} ref={mySearch}  className={"border-0 form-control rounded-0 d-sm-block "+canshow} type="text" placeholder="Search" style={{backgroundColor:`${props.theme.bg}`,color:`${props.theme.text}`}}/>
                                 <button className="btn rounded-0 rounded-start " style={{backgroundColor:"lightgray"}} type="submit"><FaSearch size={22}/></button>
                             </form>
                             <button className="btn ms-2 px-2 rounded-circle" style={{backgroundColor:"lightgray"}} type="submit"><FaMicrophone fontSize={22}/></button>
@@ -86,7 +108,6 @@ export default function Navbar(props){
                         </div>
                   </div>
                 </nav>
-                
             </div>
         )
     }

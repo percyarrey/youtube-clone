@@ -1,54 +1,48 @@
 import './App.css';
 import React from 'react';
-import axios, { Axios } from 'axios';
+import { BrowserRouter, Link, Route,Routes } from 'react-router-dom';
+
 
 /* COMPONENT IMPORT */
 import Navbar from './component/Navbar';
-import Cards from './component/Cards';
-import Wsugest from  './component/Wordsuggestion';
 import MenuExpand  from './component/MenuExpand';
 
 /* ICONS IMPORT */
-import { FaHome} from "react-icons/fa";
-import { BsPlayBtn,BsBook,BsReplyAll} from "react-icons/bs";
-/* IMPORT REACT SPINNERS */
-import {Circles} from "react-loader-spinner";
+import { BsPlayBtn,BsBook,BsReplyAll,BsHouse,BsPlayBtnFill,BsHouseFill} from "react-icons/bs";
 
+
+/* MY PAGES */
+import Homepage from './pages/Homepage';
+import Searchpage from './pages/Searchpage';
+import Shortspage from './pages/Shortspage.js';
+import Errorpage from './pages/404page';
+import Playvideopage from './pages/Playvideopage';
+var pagetoken;
 
 function App() {
-  let i=0;
-  var pagetoken;
-  //Fetch youtube data
-  const [myResponse,setmyResponse]=React.useState() 
-  const [limit,setlimit]=React.useState(30) 
 
-  React.useEffect(function(){
-    axios.get("https://youtube.googleapis.com/youtube/v3/search",
-    {params: {
-      type:"video",
-      part:'snippet',
-      maxResults:limit,
-      key:"AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM",
-      q:"tomb raider"
-    }})
-    .then(res=>setmyResponse(res.data))
-    .catch(res=>setmyResponse(res.message))
+  
+  /* ActiveMenu */
+  const [curMenu,setcurMenu] = React.useState("home")
 
-    /* async function myfxn(){
-      var res = await fetch("https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCpqXJOEqGS-TCnazcHCo0rA&maxResults=300&order=date&safeSearch=moderate&key=AIzaSyAeRR86QzkwzWDmm_8eB68NZc88DRkjTEM")
-          .then(res=> res.json())
-          .then(res=>setmyResponse(()=>{return (res)}))
-          .catch()
-          
+  function curMenufxn(p){
+    if(p.currentTarget.id=="home"){
+      setcurMenu(p.currentTarget.id)
+    }else{
+      setcurMenu(p.currentTarget.id)
     }
-    myfxn() */
-  }, [limit])
-  //const Cards = Array.from({length:6}).map((_,i)=>(<Videocards key={i}/>))
+  }
   //Theme Toggle
   const [theme,settheme] = React.useState({
       bg:"#fff",
       text:"black"
   })
+  /* MY ALERT PAGE NOT AVIALABLE */
+  function myalert() {
+    alert("Page Not Avialable try again later")
+  }
+
+
   function Changetheme(){
     if(theme.bg=="#fff"){
       settheme(()=>({
@@ -111,29 +105,29 @@ function App() {
               <div className='container-fluid d-none d-sm-flex flex-column col-md-1 col-2'></div>
               <div  className=' position-fixed container-fluid d-none d-sm-flex flex-column col-md-1 col-2'>
                 {/* HOME */}
-                <button className='btn m-0 border-0 p-0 mt-4 d-flex justify-content-center align-items-center'>
+                <Link to="/" onClick={curMenufxn} id='home' className='btn m-0 border-0 p-0 mt-4 d-flex justify-content-center align-items-center'>
                   <div  className={lgmenu}>
-                    <div className=' d-flex justify-content-center fs-2'><FaHome color={theme.text}/></div>
+                    <div className=' d-flex justify-content-center fs-2'>{curMenu=="home"?<BsHouseFill color={theme.text}/>:<BsHouse color={theme.text}/>}</div>
                   <small className='fw-bold' style={{color:`${theme.text}`}}>Home</small>
                   </div>
-                </button>
+                </Link>
                 {/* SHORTS */}
-                <button className='btn m-0 p-0 border-0 mt-4 d-flex justify-content-center align-items-center'>
-                  <div  className={lgmenu}>
-                    <div className=' d-flex justify-content-center fs-2'><BsPlayBtn color={theme.text} size={26}/></div>
+                <Link onClick={curMenufxn} id='short' to="/shorts" className='btn m-0 p-0 border-0 mt-4 d-flex justify-content-center align-items-center'>
+                  <div className={lgmenu}>
+                    <div className=' d-flex justify-content-center fs-2'>{curMenu=="short"?<BsPlayBtnFill color={theme.text} size={26}/>:<BsPlayBtn color={theme.text} size={26}/>}</div>
                     <small className='' style={{color:`${theme.text}`}}>Shorts</small>
                   </div>
-                </button>
+                </Link>
                 {/* Subcriptions */}
                 <button className='btn m-0 p-0 border-0 mt-4 d-flex justify-content-center align-items-center'>
-                  <div  className={lgmenu}>
+                  <div  onClick={myalert} className={lgmenu}>
                     <div className=' d-flex justify-content-center fs-2'><BsReplyAll color={theme.text}/></div>
                     <small className='' style={{color:`${theme.text}`}}>Subcriptions</small>
                   </div>
                 </button>
                 {/* Library */}
                 <button className='btn m-0 p-0 border-0 mt-4 d-flex justify-content-center align-items-center'>
-                  <div  className={lgmenu}>
+                  <div  onClick={myalert} className={lgmenu}>
                     <div className=' d-flex justify-content-center fs-2'>< BsBook color={theme.text}/></div>
                     <small style={{color:`${theme.text}`}}>Library</small>
                   </div>
@@ -141,24 +135,14 @@ function App() {
               </div>
               {/* CONTENT */}
               <div className='col col-sm-10 col-md-11'>
-                {/* SUGGESTION */}
-                <Wsugest theme={theme}/>
-                {/* CARDS */}
-                <div className=' container-fluid'>
-                  <div className='row'>
-                  
-                  {myResponse!=undefined && myResponse.items!=null ?  myResponse.items.map(items=>{
-                    return(
-                      <div key={items.id.videoId}  className='col-12 col-sm-6 col-md-4 col-lg-3'>
-                        <Cards videoid={items.id.videoId} video={items.snippet} theme={theme}/>
-                      </div>
-                    )
-                  }) : <div style={{height:"60vh"}} className='w-100 d-flex justify-content-center align-items-center'>
-                      {myResponse!=undefined? <div className='fw-bold'>{myResponse}</div> : <Circles color="gray" loading={true} size={150} aria-label="Loading Spinner" data-testid="loader"
-                />}
-                    </div>}
-                  </div>
-                </div>
+                {/* MY ROUTER */}
+                  <Routes>
+                    <Route path="/" element={<Homepage theme={theme}/>}/>
+                    <Route path="/search/:query"  element={<Searchpage theme={theme}/>}/>
+                    <Route path="/shorts"  element={<Shortspage theme={theme}/>}/>
+                    <Route path="/watch/:videoid"  element={<Playvideopage theme={theme}/>}/>
+                    <Route path="*"  element={<Errorpage/>}/>
+                  </Routes>
               </div>
             </div>
           </div>
@@ -166,7 +150,7 @@ function App() {
         {/* MenuExpand */}
         <div ref={myMenu} className="myMenu d-none" style={{zIndex:2}}>
           <div ref={menuAnimate}className='w-100 h-100 menuAnimate'>
-            <MenuExpand theme={theme} Popout={PopoutMainmenu}/>
+            <MenuExpand curMenufxn={curMenufxn}  curMenu={curMenu} theme={theme} Popout={PopoutMainmenu}/>
           </div>
         </div>
       </div>

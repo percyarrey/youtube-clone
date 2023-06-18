@@ -23,48 +23,60 @@ export default function Wsugest(props){
     }
     setInterval(() => {
         if(mysug!=null){
-            var hiddenWidth = mysug.current.scrollWidth-mysug.current.clientWidth
-            if(hiddenWidth===0 && leftbtn!=null && rightbtn!=null){
-                setlbtnui(prev=>{
-                    return' pt-3 pb-3 d-flex align-items-start justify-content-center d-none'
-                })
-                setrbtnui(prev=>{
-                    return'col-1 pt-3 pb-3 d-flex align-items-start justify-content-center d-none'
-                })   
-            }
-            if(mysug.current.scrollLeft===0 && leftbtn!=null){
-                setlbtnui(prev=>{
-                    return'pt-3 pb-3 d-flex align-items-start justify-content-center d-none'
-                })
-            }
-            if(mysug.current.scrollright===0 && rightbtn!=null){
-                setrbtnui(prev=>{
-                    return'col-1 pt-3 pb-3 d-flex align-items-start justify-content-center d-none'
-                })
-            }
-            if(mysug.current.scrollLeft!==0 && hiddenWidth!==0  && leftbtn!=null){
-                setlbtnui(prev=>{
-                    return'pt-3 pb-3 d-flex align-items-start justify-content-center'
-                })
-            }
-
-            if(mysug.current.scrollRight!==0 && hiddenWidth!==0  && rightbtn!=null ){
-                setrbtnui(prev=>{
-                    return'col-1 pt-3 pb-3 d-flex align-items-start justify-content-center'
-                })
-            }
-            if(setnumtheme==true){
-                var button = mysug.current.querySelectorAll('button') 
-                button.forEach((e)=>{
-                    
-                    e.style.color=props.theme.text
-                    if(e.classList.contains("myActive")){
-                      e.style.backgroundColor=props.theme.text
-                      e.style.color=props.theme.bg
+            if(mysug.current!=null){
+                var hiddenWidth = mysug.current.scrollWidth-mysug.current.clientWidth
+                if(hiddenWidth===0 && leftbtn!=null && rightbtn!=null){
+                    setlbtnui(prev=>{
+                        return' pt-3 pb-3 d-flex align-items-start justify-content-center d-none'
+                    })
+                    setrbtnui(prev=>{
+                        return'col-1 pt-3 pb-3 d-flex align-items-start justify-content-center d-none'
+                    })   
                     }
-                })
-                setnumtheme=false
+                    if(mysug.current.scrollLeft===0 && leftbtn!=null){
+                        setlbtnui(prev=>{
+                            return'pt-3 pb-3 d-flex align-items-start justify-content-center d-none'
+                        })
+                    }
+                    if(mysug.current.scrollright===0 && rightbtn!=null){
+                        setrbtnui(prev=>{
+                            return'col-1 pt-3 pb-3 d-flex align-items-start justify-content-center d-none'
+                        })
+                    }
+                    if(mysug.current.scrollLeft!==0 && hiddenWidth!==0  && leftbtn!=null){
+                        setlbtnui(prev=>{
+                            return'pt-3 pb-3 d-flex align-items-start justify-content-center'
+                        })
+                    }
+
+                    if(mysug.current.scrollRight!==0 && hiddenWidth!==0  && rightbtn!=null ){
+                        setrbtnui(prev=>{
+                            return'col-1 pt-3 pb-3 d-flex align-items-start justify-content-center'
+                        })
+                    }
+                    if(setnumtheme==true){
+                        var button = mysug.current.querySelectorAll('button') 
+                        button.forEach((e)=>{
+                            e.style.color=props.theme.text
+                            if(e.classList.contains("myActive")){
+                                e.style.backgroundColor=props.theme.text
+                                e.style.color=props.theme.bg
+                            }else{
+                                e.style.color=props.theme.text
+                                if(props.theme.bg!="#fff"){
+                                    e.style.backgroundColor="black"
+                                }else{
+                                    e.style.backgroundColor="#D3D3D3"
+                                }
+                            }
+                        })
+                        setnumtheme=false
+                    }
+            }else{
+                return;
             }
+        }else{
+            return;
         }
     }, 1000);
 
@@ -78,15 +90,16 @@ export default function Wsugest(props){
                 </div>
                 <div className='col-11'>
                 <div className='pt-2 pb-3 gap-2 d-flex align-items-center overflow-hidden mysugbtn'  style={{backgroundColor:`${props.theme.bg}`,color:`${props.theme.text}`}} ref={mysug} >
-                <nobr><button className='myActive'>All</button></nobr>
-                <nobr><button>Comedy</button></nobr>
-                <nobr><button>Gaming</button></nobr>
-                <nobr><button >Video game walkthrough</button></nobr>
-                <nobr><button >Under 10 min</button></nobr>
-                <nobr><button>Playstation 4</button></nobr>
-                <nobr><button>Naruto</button></nobr>
-                <nobr><button >Character</button></nobr>
-                <nobr><button >Music</button></nobr>
+                <nobr><button onClick={props.Squery}>All</button></nobr>
+                <nobr><button onClick={props.Squery}>GTA 6</button></nobr>
+                <nobr><button onClick={props.Squery}>Comedy</button></nobr>
+                <nobr><button onClick={props.Squery}>Gaming</button></nobr>
+                <nobr><button onClick={props.Squery} >Video game walkthrough</button></nobr>
+                <nobr><button  onClick={props.Squery}>Under 10 min</button></nobr>
+                <nobr><button onClick={props.Squery}>Playstation 4</button></nobr>
+                <nobr><button onClick={props.Squery}>Naruto</button></nobr>
+                <nobr><button  onClick={props.Squery}>Character</button></nobr>
+                <nobr><button  onClick={props.Squery}>Music</button></nobr>
                 </div>
             </div>
             <div className={rbtnui} ref={rightbtn} >
